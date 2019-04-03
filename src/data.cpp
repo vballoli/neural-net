@@ -19,28 +19,21 @@ Data::~Data()
 
 vector<vector<double>> Data::formatData(string path)
 {
-    vector<vector<double> > data{ { 1, 2 }, 
-                               { 4, 5, 6 }, 
-                               { 7, 8, 9, 10 } }; 
+    vector<vector<double> > data; 
     ifstream input_file;
-    data.clear();
     input_file.open(path.c_str());
     while (input_file)
     {
         vector<string> string_file_data;
         string file_data;
         getline(input_file, file_data);
-        boost::split(string_file_data, file_data, boost::is_any_of(","));
         try
         {
-            double x1 = boost::lexical_cast<double>(string_file_data[1]);
-            double x2 = boost::lexical_cast<double>(string_file_data[2]);
-            double y = boost::lexical_cast<double>(string_file_data[3]);
-            vector<double> row(3,3);
-            row.clear();
-            row.push_back(x1);
-            row.push_back(x2);
-            row.push_back(y);
+            boost::split(string_file_data, file_data, boost::is_any_of(","));
+            vector<double> row;
+            for (int i=1; i < string_file_data.size(); ++i) {
+                row.push_back(boost::lexical_cast<double>(string_file_data[i]));
+            }
             data.push_back(row);
             cout<<data.back()[0]<<endl;
         } catch (exception e) {
