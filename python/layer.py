@@ -1,4 +1,5 @@
 import numpy as np
+from sklearn.metrics import mean_squared_error
 
 class Layer:
     """
@@ -45,7 +46,6 @@ class Layer:
         Returns:
             Value of the derivative of the activation function
         """
-        print("Type: ", type(x))
         if self.activation_function == self.LINEAR:
             return np.ones(x.shape)
         elif self.activation_function == self.SIGMOID:
@@ -66,7 +66,6 @@ class Layer:
         """
         self.X = X
         self.y = self.activation(np.dot(X, self.weights))
-        print("Self.y shape: ", self.y.shape)
         return self.y
 
     def back_propogate(self, layer, y):
@@ -78,15 +77,17 @@ class Layer:
 
         """
         if layer is None:
-            print("Y shape: ", y.shape)
             y = y.reshape((y.shape[0],1))
             self.d_activation = (y - self.y) * self.derivative_activation(self.y)
-            print("d_activation: ", self.d_activation.shape)
         else:
-            print("Layer weight shape: ", layer.weights.T.shape, " layers.weights.T ", layer.weights.T.shape, " derivative activation ", self.derivative_activation(self.y).shape)
             self.d_activation = np.dot(layer.d_activation, layer.weights.T) * self.derivative_activation(self.y)
-        print("X shape: ", self.X.shape, " self.d_activation shape: ", self.d_activation.shape)
         self.d_weights = np.dot(self.X.T, self.d_activation)
-        print("D weights: ", self.d_weights.shape)
+    
+    def compute_error(self, y):
+        """ Calculates the error as per the output
+        """
+        error = mean_squared_error(self.y, y)**2
+        print("Error: ", error)
+        return error
         
 

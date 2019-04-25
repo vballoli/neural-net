@@ -4,6 +4,7 @@ from tensorflow.keras.layers import Dense
 import numpy as np
 import os
 from PIL import Image
+from sklearn.model_selection import train_test_split
 
 model = Sequential()
 model.add(Dense(2500, input_shape=(2500,), activation='linear'))
@@ -21,10 +22,11 @@ model.add(Dense(1, activation='sigmoid'))
 # layers.append(Layer(4, 1, Layer.SIGMOID))
 # n = NeuralNetwork(alpha, layers)
 
-path = './images/'
+path = '/Volumes/mp/Datasets/ml/train/'
 
 X = []
 y = []
+
 
 for image_path in os.listdir(path):
     img = np.array(Image.open(path+image_path).convert('L').resize((50, 50)))
@@ -43,6 +45,9 @@ print(X.shape)
 y = y.reshape((y.shape[0], 1))
 print(y.shape)
 
-model.compile(loss='mean_squared_error', optimizer='RMSProp')
-model.fit(X, y, epochs=100)
-print(model.predict(X))
+X_train, X_test, y_train, y_test = train_test_split(X, y)
+
+
+# model.compile(loss='mean_squared_error', optimizer='RMSProp')
+# model.fit(X, y, epochs=100)
+# print(model.predict())

@@ -22,13 +22,10 @@ class NeuralNetwork:
         self.X = X
         layers = self.layers
         for i in range(len(layers)):
-            print("Layer: ", i+1)
             current_layer = layers[i]
             if i != 0:
                 previous_layer = layers[i-1]
                 current_layer.feed_forward(previous_layer.y)
-                if i == (len(layers) - 1):
-                    print(layers[i].y)
             else:
                 current_layer.feed_forward(X)
         self.layers = layers
@@ -40,11 +37,11 @@ class NeuralNetwork:
         self.y = y
         layers = self.layers
         for i in reversed(range(len(layers))):
-            print("Backprop layer: ", i+1)
             current_layer = layers[i]
             if i != len(layers)-1:
                 current_layer.back_propogate(layers[i+1], None)
             else:
+                current_layer.compute_error(y)
                 current_layer.back_propogate(None, y)
         self.layers = layers
 
@@ -54,7 +51,6 @@ class NeuralNetwork:
         """
         layers = self.layers
         for layer in layers:
-            print("Layer weight: ", layer.weights.shape, " layer.d_weights.shape ", layer.d_weights.shape)
             layer.weights += self.learning_rate * layer.d_weights
         self.layers = layers
             
